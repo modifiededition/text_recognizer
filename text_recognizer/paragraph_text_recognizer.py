@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Sequence, Union
 
 from PIL import Image
-from PIL import ImageStat
+#from PIL import ImageStat
 import torch
 
 import util

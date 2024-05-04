@@ -16,6 +16,16 @@ from tqdm import tqdm
 import argparse
 
 
+DATA_CLASS_MODULE = "text_recognizer.data"
+MODEL_CLASS_MODULE = "text_recognizer.models"
+
+def import_class(module_and_class_name: str) -> type:
+    """Import class from a module, e.g. 'text_recognizer.models.MLP'."""
+    module_name, class_name = module_and_class_name.rsplit(".", 1)
+    module = importlib.import_module(module_name)
+    class_ = getattr(module, class_name)
+    return class_
+
 def to_categorical(y, num_classes):
     """1-hot encode a tensor."""
     return np.eye(num_classes, dtype="uint8")[y]

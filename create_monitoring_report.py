@@ -5,12 +5,11 @@ from PIL import Image
 
 from evidently import ColumnMapping
 from evidently.report import Report
-from evidently.test_suite import TestSuite
-
-from evidently.metrics import DataDriftTable, TextDescriptorsDriftMetric, ColumnDriftMetric
+#from evidently.test_suite import TestSuite
+#from evidently.metrics import DataDriftTable, TextDescriptorsDriftMetric, ColumnDriftMetric
 from evidently.metric_preset import TextOverviewPreset
-from evidently.descriptors import TextLength, TriggerWordsPresence, OOV, NonLetterCharacterPercentage, SentenceCount, WordCount, Sentiment
-from evidently.tests import *
+from evidently.descriptors import TextLength, OOV, NonLetterCharacterPercentage, SentenceCount, WordCount
+#from evidently.tests import *
 
 
 test_labels_path = "/teamspace/studios/this_studio/handwritting_text_recognizer/data/processed/iam_paragraphs/test/_labels.json"
@@ -29,7 +28,6 @@ def prepare_text_label_data(data_path):
     
     ids = list(labels_data.keys())
     text_labels = list(labels_data.values())
-
     return pd.DataFrame(zip(ids,text_labels), columns=["id","text_label"])
 
 def prepate_image_data_stats(data, data_type):
@@ -38,7 +36,6 @@ def prepate_image_data_stats(data, data_type):
     
     avg_intensity_list = []
     img_median_list = []
-    image_extrema_list = []
     image_area_list = []
 
     for id in ids:
@@ -75,7 +72,6 @@ def merge_datasets(a,b,c):
     train_data = merge_data(train_labels_data,train_image_data)
     val_data = merge_data(val_labels_data,val_image_data)
     test_data = merge_data(test_labels_data,test_image_data)
-    
     return train_data,val_data,test_data
 
 
@@ -96,13 +92,12 @@ def create_report(ref_data,current_data):
 
 if __name__ == "__main__":
     train_labels_data,val_labels_data,test_labels_data = prepate_text_data()
-    train_image_data,val_image_data,test_image_data = prepate_image_data(train_labels_data,val_labels_data,test_labels_data)
+    train_image_data,val_image_data,test_image_data = prepare_image_data(train_labels_data,val_labels_data,test_labels_data)
     train_image_data,val_image_data,test_image_data = merge_datasets(
                                                             (train_labels_data,train_image_data),
                                                             (val_labels_data,val_image_data),
                                                             (test_labels_data,test_image_data)
     )
-
     return create_report(train_image_data,test_image_data)
 
 

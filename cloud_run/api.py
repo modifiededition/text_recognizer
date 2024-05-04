@@ -11,7 +11,7 @@ from text_recognizer.paragraph_text_recognizer import ParagraphTextRecognizer
 from text_recognizer import util
 
 from fastapi import FastAPI
-from pydantic import BaseModel
+#from pydantic import BaseModel
 from typing import Dict
 
 model = ParagraphTextRecognizer()

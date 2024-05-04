@@ -1,6 +1,5 @@
 """Provide an image of handwritten text and get back out a string!"""
 import argparse
-import json
 import logging
 import os
 from pathlib import Path
@@ -125,7 +124,7 @@ class PredictorBackend:
         """
         encoded_image = util.encode_b64_image(image)
 
-        headers = {"Content-type": "application/json"}
+        #headers = {"Content-type": "application/json"}
         #payload = json.dumps()
         payload = {"image": "data:image/png;base64," + encoded_image}
         response = requests.post(self.url, json=payload)
