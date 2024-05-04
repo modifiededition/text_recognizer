@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from typing import Callable, Dict, Optional, Sequence, Tuple
 
+import pandas as pd
 import numpy as np
 from PIL import Image
 from pytorch_lightning.utilities.rank_zero import rank_zero_info
@@ -19,6 +20,7 @@ IMAGE_SCALE_FACTOR = metadata.IMAGE_SCALE_FACTOR
 MAX_LABEL_LENGTH = metadata.MAX_LABEL_LENGTH
 NEW_LINE_TOKEN = metadata.NEW_LINE_TOKEN
 PROCESSED_DATA_DIRNAME = metadata.PROCESSED_DATA_DIRNAME
+SYNTHETIC_PROCESSED_DATA_DIRNAME = metadata.SYNTHETIC_PROCESSED_DATA_DIRNAME
 
 
 class IAMParagraphs(BaseDataModule):
@@ -73,18 +75,41 @@ class IAMParagraphs(BaseDataModule):
             json.dump(properties, f, indent=4)
 
     def setup(self, stage: str = None) -> None:
+
+        def train_load_dataset(split: str, transform: Callable) -> BaseDataset:
+            # loading IAM Patagraph dataset
+            crops, labels = load_processed_crops_and_labels(split)
+
+            # loading synthetic dataset
+            grey_images,grey_labels = load_synthetic_images_and_labels("grey_images")
+            grey_images_v2,grey_labels_v2 = load_synthetic_images_and_labels("grey_images_v2")
+            
+            black_images,black_labels = load_synthetic_images_and_labels("black_images")
+            black_images_v2,black_labels_v2 = load_synthetic_images_and_labels("black_images_v2")
+            
+            blue_images,blue_labels = load_synthetic_images_and_labels("blue_images")
+            blue_images_v2,blue_labels_v2 = load_synthetic_images_and_labels("blue_images_v2")
+            
+            final_images = crops  + grey_images + black_images + blue_images + grey_images_v2  + black_images_v2 + blue_images_v2
+            final_labels = labels + grey_labels + black_labels + blue_labels + grey_labels_v2 + black_labels_v2 + blue_labels_v2
+
+            Y = convert_strings_to_labels(strings=final_labels, mapping=self.inverse_mapping, length=self.output_dims[0])
+
+            return BaseDataset(final_images, Y, transform=transform)
+
         def _load_dataset(split: str, transform: Callable) -> BaseDataset:
             crops, labels = load_processed_crops_and_labels(split)
             Y = convert_strings_to_labels(strings=labels, mapping=self.inverse_mapping, length=self.output_dims[0])
+
             return BaseDataset(crops, Y, transform=transform)
 
         rank_zero_info(f"IAMParagraphs.setup({stage}): Loading IAM paragraph regions and lines...")
         validate_input_and_output_dimensions(input_dims=self.input_dims, output_dims=self.output_dims)
 
         if stage == "fit" or stage is None:
-            self.data_train = _load_dataset(split="train", transform=self.trainval_transform)
+            self.data_train = train_load_dataset(split="train", transform=self.trainval_transform)
             self.data_val = _load_dataset(split="val", transform=self.transform)
-
+            
         if stage == "test" or stage is None:
             self.data_test = _load_dataset(split="test", transform=self.transform)
 
@@ -151,6 +176,20 @@ def save_crops_and_labels(crops: Dict[str, Image.Image], labels: Dict[str, str],
         crop.save(_crop_filename(id_, split))
 
 
+def load_synthetic_images_and_labels(img_type:str):
+    label_filename = synthetic_filename(img_type) / "labels.pkl"
+    labels = pd.read_pickle(label_filename)
+    image_names = list(labels.keys())
+    image_names = [i+ ".png" for i in image_names]
+    image_labels = list(labels.values())
+    image_labels = [" ".join(i) for i in image_labels ]
+
+    images_filename = synthetic_filename(img_type)
+    opened_images = [Image.open(images_filename / name).convert("L")  for name in image_names ]
+
+    assert len(opened_images) == len(image_labels)
+    return opened_images, image_labels
+
 def load_processed_crops_and_labels(split: str) -> Tuple[Sequence[Image.Image], Sequence[str]]:
     """Load processed crops and labels for given split."""
     with open(_labels_filename(split), "r") as f:
@@ -189,11 +228,13 @@ def _labels_filename(split: str) -> Path:
     """Return filename of processed labels."""
     return PROCESSED_DATA_DIRNAME / split / "_labels.json"
 
+def synthetic_filename(img_type: str) -> Path:
+    """Return filename of processed labels."""
+    return SYNTHETIC_PROCESSED_DATA_DIRNAME / img_type
 
 def _crop_filename(id_: str, split: str) -> Path:
     """Return filename of processed crop."""
     return PROCESSED_DATA_DIRNAME / split / f"{id_}.png"
-
 
 def _num_lines(label: str) -> int:
     """Return number of lines of text in label."""

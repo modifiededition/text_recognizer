@@ -13,6 +13,8 @@ from PIL import Image
 import smart_open
 from tqdm import tqdm
 
+import argparse
+
 
 def to_categorical(y, num_classes):
     """1-hot encode a tensor."""
@@ -73,3 +75,46 @@ def download_url(url, filename):
     """Download a file from url to filename, with a progress bar."""
     with TqdmUpTo(unit="B", unit_scale=True, unit_divisor=1024, miniters=1) as t:
         urlretrieve(url, filename, reporthook=t.update_to, data=None)  # noqa: S310
+
+
+def setup_data_and_model_from_args(args: argparse.Namespace):
+    data_class = import_class(f"{DATA_CLASS_MODULE}.{args.data_class}")
+    model_class = import_class(f"{MODEL_CLASS_MODULE}.{args.model_class}")
+
+    data = data_class(args)
+    model = model_class(data_config=data.config(), args=args)
+
+    return data, model
+
+def read_b64_image(b64_string, grayscale=False):
+    """Load base64-encoded images."""
+    try:
+        image_file = read_b64_string(b64_string)
+        return read_image_pil_file(image_file, grayscale)
+    except Exception as exception:
+        raise ValueError("Could not load image from b64 {}: {}".format(b64_string, exception)) from exception
+
+
+def read_b64_string(b64_string, return_data_type=False):
+    """Read a base64-encoded string into an in-memory file-like object."""
+    data_header, b64_data = split_and_validate_b64_string(b64_string)
+    b64_buffer = BytesIO(base64.b64decode(b64_data))
+    if return_data_type:
+        return get_b64_filetype(data_header), b64_buffer
+    else:
+        return b64_buffer
+
+
+def get_b64_filetype(data_header):
+    """Retrieves the filetype information from the data type header of a base64-encoded object."""
+    _, file_type = data_header.split("/")
+    return file_type
+
+
+def split_and_validate_b64_string(b64_string):
+    """Return the data_type and data of a b64 string, with validation."""
+    header, data = b64_string.split(",", 1)
+    assert header.startswith("data:")
+    assert header.endswith(";base64")
+    data_type = header.split(";")[0].split(":")[1]
+    return data_type, data

@@ -36,6 +36,9 @@ class TransformerLitModel(BaseImageToTextLitModel):
         -------
         torch.Tensor
             (B, C, Sy) logits
+            here B is the batch size,
+            C is the number of classes
+            Sy is the sequence length.
         """
         x = self.model.encode(x)
         output = self.model.decode(x, y)  # (Sy, B, C)

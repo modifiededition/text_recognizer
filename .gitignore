@@ -1,1 +1,7 @@
 __pycache__/
+data/
+artifacts/
+logs/
+notebooks/
+requirements/lightning_logs
+requirements/.lr_find_3f3f3dab-0d75-425b-bdac-8b36cb6332b6.ckpt

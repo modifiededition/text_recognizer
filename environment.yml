@@ -1,4 +1,4 @@
-name: fsdl-text-recognizer-2022
+name: handwritten_recognizer_env
 channels:
   - pytorch
   - nvidia

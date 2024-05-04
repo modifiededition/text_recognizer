@@ -12,6 +12,9 @@ from text_recognizer import callbacks as cb
 from text_recognizer import lit_models
 from util import DATA_CLASS_MODULE, import_class, MODEL_CLASS_MODULE, setup_data_and_model_from_args
 
+# rank_zero_info ensures that only the rank zero process (often the master process) prints the log message,
+# while other processes remain silent in case of distributed setting.
+
 
 # In order to ensure reproducible experiments, we must set random seeds.
 np.random.seed(42)
@@ -20,18 +23,18 @@ torch.manual_seed(42)
 
 def _setup_parser():
     """Set up Python's ArgumentParser with data, model, trainer, and other arguments."""
-    parser = argparse.ArgumentParser(add_help=False)
+    parser = argparse.ArgumentParser(add_help=False) # add_help=False is used to not add -h/--help option not by default.
 
     # Add Trainer specific arguments, such as --max_epochs, --gpus, --precision
-    trainer_parser = pl.Trainer.add_argparse_args(parser)
-    trainer_parser._action_groups[1].title = "Trainer Args"
-    parser = argparse.ArgumentParser(add_help=False, parents=[trainer_parser])
+    trainer_parser = pl.Trainer.add_argparse_args(parser) # passing Trainer object aruguments to the parser.
+    trainer_parser._action_groups[1].title = "Trainer Args" # This line customizes the title of the second action group within the trainer_parser. The action groups are essentially logical groupings of arguments.
+    parser = argparse.ArgumentParser(add_help=False, parents=[trainer_parser]) # this is creating second parser which is inheriting all arguments from the parser.
     parser.set_defaults(max_epochs=1)
 
     # Basic arguments
     parser.add_argument(
         "--wandb",
-        action="store_true",
+        action="store_true",# it means when user write this arg name while executing the script, it by default set its value to True
         default=False,
         help="If passed, logs experiment results to Weights & Biases. Otherwise logs only to local Tensorboard.",
     )
@@ -64,8 +67,10 @@ def _setup_parser():
     model_class = import_class(f"{MODEL_CLASS_MODULE}.{temp_args.model_class}")
 
     # Get data, model, and LitModel specific arguments
+
+    # Argument groups are used to logically group related arguments together when displaying help information.
     data_group = parser.add_argument_group("Data Args")
-    data_class.add_to_argparse(data_group)
+    data_class.add_to_argparse(data_group)# this will add data class related arguments to the data group
 
     model_group = parser.add_argument_group("Model Args")
     model_class.add_to_argparse(model_group)
@@ -89,12 +94,12 @@ def main():
 
     Sample command:
     ```
-    python training/run_experiment.py --max_epochs=3 --gpus='0,' --num_workers=20 --model_class=MLP --data_class=MNIST
+    python run_experiment.py --max_epochs=3 --gpus='0,' --num_workers=20 --model_class=MLP --data_class=MNIST
     ```
 
     For basic help documentation, run the command
     ```
-    python training/run_experiment.py --help
+    python run_experiment.py --help
     ```
 
     The available command line args differ depending on some of the arguments, including --model_class and --data_class.
@@ -102,7 +107,7 @@ def main():
     To see which command line args are available and read their documentation, provide values for those arguments
     before invoking --help, like so:
     ```
-    python training/run_experiment.py --model_class=MLP --data_class=MNIST --help
+    python run_experiment.py --model_class=MLP --data_class=MNIST --help
     """
     parser = _setup_parser()
 
