@@ -10,12 +10,8 @@ from PIL import ImageStat
 from PIL.Image import Image
 import requests
 
-import sys
-lib_path = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(lib_path)
-sys.path.append(f"{lib_path}/text_recognizer")
-from .text_recognizer.paragraph_text_recognizer import ParagraphTextRecognizer
-import util
+from handwritting_text_recognizer.text_recognizer.paragraph_text_recognizer import ParagraphTextRecognizer
+from handwritting_text_recognizer import util
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""  # do not use GPU
 
