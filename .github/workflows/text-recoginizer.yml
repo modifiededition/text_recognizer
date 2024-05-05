@@ -39,5 +39,5 @@ jobs:
       continue-on-error: true
     - name: Running Unit Test
       run: |
-        pytest test_app.py
+        pytest text_recognizer/test_app.py
 
