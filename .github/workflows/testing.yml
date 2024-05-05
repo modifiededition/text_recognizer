@@ -39,6 +39,7 @@ jobs:
       continue-on-error: true
     - name: Running Unit Test
       run: |
+        python test_app.py
         pytest test_app.py
       continue-on-error: true
 
