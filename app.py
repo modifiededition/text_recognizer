@@ -10,8 +10,8 @@ from PIL import ImageStat
 from PIL.Image import Image
 import requests
 
-from handwritting_text_recognizer.text_recognizer.paragraph_text_recognizer import ParagraphTextRecognizer
-from handwritting_text_recognizer import util
+from text_recognizer.paragraph_text_recognizer import ParagraphTextRecognizer
+import util
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""  # do not use GPU
 

@@ -1,4 +1,4 @@
-from handwritting_text_recognizer.text_recognizer.metadata import shared as shared
+import text_recognizer.metadata.shared as shared
 
 PROCESSED_DATA_DIRNAME = shared.DATA_DIRNAME / "processed" / "iam_paragraphs"
 

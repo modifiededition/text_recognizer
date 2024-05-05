@@ -4,10 +4,15 @@ import os
 import requests
 import torch
 import sys
-from handwritting_text_recognizer import app
-from handwritting_text_recognizer import util
-from handwritting_text_recognizer.text_recognizer.metadata import iam_paragraphs as metadata
-from handwritting_text_recognizer.text_recognizer.models import ResnetTransformer
+current_dir_path = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(f"{current_dir_path}")
+sys.path.append(f"{current_dir_path}/text_recognizer")
+sys.path.append(f"{current_dir_path}/text_recognizer/stems")
+import app
+import util
+
+from text_recognizer.metadata import iam_paragraphs as metadata
+from text_recognizer.models import ResnetTransformer
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
