@@ -1,8 +1,8 @@
 """IAMParagraphs Stem class."""
 import torchvision.transforms as transforms
 
-from text_recognizer.metadata import iam_paragraphs as metadata
-from text_recognizer.stems.image import ImageStem
+from .text_recognizer.metadata import iam_paragraphs as metadata
+from .text_recognizer.stems.image import ImageStem
 
 
 IMAGE_HEIGHT, IMAGE_WIDTH = metadata.IMAGE_HEIGHT, metadata.IMAGE_WIDTH

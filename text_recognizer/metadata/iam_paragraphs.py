@@ -1,4 +1,4 @@
-from text_recognizer.metadata import shared as shared
+from .text_recognizer.metadata import shared as shared
 
 
 PROCESSED_DATA_DIRNAME = shared.DATA_DIRNAME / "processed" / "iam_paragraphs"
