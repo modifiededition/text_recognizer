@@ -13,6 +13,7 @@ import requests
 import sys
 lib_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(lib_path)
+sys.path.append(f"{lib_path}/text_recognizer")
 from text_recognizer.paragraph_text_recognizer import ParagraphTextRecognizer
 import util
 
