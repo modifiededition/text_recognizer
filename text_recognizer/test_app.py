@@ -3,7 +3,7 @@ import os
 
 import requests
 import torch
-
+import sys
 from handwritting_text_recognizer import app
 from handwritting_text_recognizer import util
 from handwritting_text_recognizer.text_recognizer.metadata import iam_paragraphs as metadata
