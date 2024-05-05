@@ -11,8 +11,9 @@ from PIL.Image import Image
 import requests
 
 import sys
-sys.path.append("./text_recognizer/")
-from .text_recognizer.paragraph_text_recognizer import ParagraphTextRecognizer
+lib_path = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(lib_path)
+from text_recognizer.paragraph_text_recognizer import ParagraphTextRecognizer
 import util
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""  # do not use GPU
@@ -21,7 +22,7 @@ logging.basicConfig(level=logging.INFO)
 
 APP_DIR = Path(__file__).resolve().parent  # what is the directory for this application?
 #FAVICON = APP_DIR / "1f95e.png"  # path to a small image for display in browser tab and social media
-README = APP_DIR / "README.md"  # path to an app readme file in HTML/markdown
+README = APP_DIR / "FRONTEND_README.md"  # path to an app readme file in HTML/markdown
 
 DEFAULT_PORT = 7860
 

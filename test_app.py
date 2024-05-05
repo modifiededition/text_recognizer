@@ -3,11 +3,12 @@ import os
 
 import requests
 import torch
-
-from handwritting_text_recognizer import app
-from handwritting_text_recognizer import util
-from handwritting_text_recognizer.text_recognizer.metadata import iam_paragraphs as metadata
-from handwritting_text_recognizer.text_recognizer.models import ResnetTransformer
+import sys
+sys.path.append("/text_recognizer")
+from . import app
+from . import util
+from text_recognizer.metadata import iam_paragraphs as metadata
+from text_recognizer.models import ResnetTransformer
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
