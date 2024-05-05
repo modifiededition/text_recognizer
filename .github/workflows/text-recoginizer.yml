@@ -37,3 +37,7 @@ jobs:
         pip install ruff
         ruff --output-format=github .
       continue-on-error: true
+    - name: Running Unit Test
+      run: |
+        pytest tests/test_app.py
+

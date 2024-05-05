@@ -12,7 +12,7 @@ import requests
 
 import sys
 sys.path.append("./text_recognizer/")
-from text_recognizer.paragraph_text_recognizer import ParagraphTextRecognizer
+from .text_recognizer.paragraph_text_recognizer import ParagraphTextRecognizer
 import util
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""  # do not use GPU
