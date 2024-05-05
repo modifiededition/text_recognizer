@@ -7,8 +7,8 @@ import sys
 current_dir_path = os.path.dirname(os.path.abspath(__file__))
 print(current_dir_path)
 sys.path.append(f"{current_dir_path}")
-sys.path.append(f"{current_dir_path}/text_recognizer")
-sys.path.append(f"{current_dir_path}/text_recognizer/stems")
+#sys.path.append(f"{current_dir_path}/text_recognizer")
+sys.path.append(f"{current_dir_path}/stems")
 import app
 import util
 
