@@ -39,5 +39,5 @@ jobs:
       continue-on-error: true
     - name: Running Unit Test
       run: |
-        pytest tests/test_app.py
+        pytest test_app.py
 
