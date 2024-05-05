@@ -1,7 +1,7 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python.
 # It also creates a docker container and pust it to the docker HUB repository.
 
-name: Text Recognizer Model
+name: Testing the codebase
 
 on:
   push:
@@ -39,6 +39,6 @@ jobs:
       continue-on-error: true
     - name: Running Unit Test
       run: |
-        pytest text_recognizer/test_app.py
+        pytest test_app.py
       continue-on-error: true
 
