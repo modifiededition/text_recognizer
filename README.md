@@ -2,7 +2,7 @@
 # Handwritten Text Recognizer
 
 This repository contains the code base for a handwritten text recognizer. The machine learning model architecture is based on the image-to-sequence paradigm. For image encoding, 
-a ResNet architecture is employed, while decoding utilizes a Transformer architecture. The model comprises 21 million parameters and has been trained over 20 hours using a Tesla T4 machine.
+a ResNet architecture is employed, while decoding utilizes a Transformer architecture. The model comprises 14 million parameters and has been trained over 20 hours using a Tesla T4 machine.
 Training data is sourced from the IAM paragraph dataset, augmented with synthetic data to improve performance.
 Through data augmentation, the validation Character Error Rate (CER) has been reduced from 0.78 to 0.23.
 
